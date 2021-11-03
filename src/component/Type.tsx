@@ -26,7 +26,7 @@ function InputElement(props: InputElement_P) {
     useEffect(() => {
         const { current } = InputRef;
         if (current != null) {
-            console.log("INIT")
+            console.log("INIT");
         }
     }, [InputRef.current])
 
