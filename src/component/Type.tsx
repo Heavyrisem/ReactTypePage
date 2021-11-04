@@ -1,50 +1,48 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../style/Type.css';
+import InputElement from "./InputElement";
+import { Language_T } from "./Main";
 
-const TypeStrings = ["질병은 입을 좇아 들어가고 화근은 입을 좇아 나온다", "말을 많이 하는 것과 말을 잘하는 것은 다르다", "프로에게서 자기 수련과 극기심을 배워라"];
+import Texts from './Text.json';
+
 
 function Type() {
+    const [TextList, setTextList] = useState<string[]>([""]);
+    const [index, setIndex] = useState<number>(0);
+	const [Language, setLanguage] = useState<Language_T>(Language_T.ko);
+
+
+    useEffect(() => {
+        // console.log(Language)
+        let TextArr: string[];
+        switch (Language) {
+            case Language_T.en: TextArr = Texts.TextList.en; break;
+            case Language_T.ko: TextArr = Texts.TextList.ko; break;
+        }
+
+        TextArr.sort(() => Math.random() - 0.5);
+        // console.log(TextArr)
+        setTextList(TextArr);
+    }, [Language]);
+
+    function InputEmitted() {
+        setIndex(index+1);
+        // console.log("End", TextList[index+1]);
+    }
+
+	function ChangeLanguage() {
+		const LangList = ["ko", "en"];
+		setLanguage(LangList[Number(!LangList.indexOf(Language))] as Language_T)
+	}
 
     return (
         <div className="Type">
-            <InputElement defaultStr={TypeStrings[2]} />
+			<div className="LanguageSwitcher" onClick={ChangeLanguage}>{Language} - 클릭하여 언어 변경</div>
+            <InputElement defaultStr={TextList[index]? TextList[index]:"모두 타이핑 하셨습니다."} onSubmit={InputEmitted} />
         </div>
     )
 }
 
 
-
-
-
-interface InputElement_P {
-    defaultStr: string
-}
-function InputElement(props: InputElement_P) {
-    const InputRef = useRef<HTMLTextAreaElement>(null);
-    const InputCursor = useState<number>(0);
-
-    useEffect(() => {
-        const { current } = InputRef;
-        if (current != null) {
-            console.log("INIT");
-        }
-    }, [InputRef.current])
-
-    
-
-
-    return (
-        <>
-            <textarea className="InputElement" ref={InputRef} />
-            <ul>
-            {props.defaultStr.split(" ").map((Word, idx, arr) => {
-                    if (idx < arr.length) Word+=" ";
-                    return <li key={idx}>{Word.split("").map((Str, i) => (<span key={idx+i+""}>{Str}</span>))}</li>
-                })
-            }
-            </ul>
-        </>
-    )
-}
 
 export default Type;

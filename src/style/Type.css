@@ -16,12 +16,17 @@
     margin: 0;
 
     resize: none;
-    opacity: 0.1;
-    z-index: -1;
-    background: grey;
+    z-index: -999;
+    background: none;
+    opacity: 0;
+    outline: none;
+    text-decoration: none;
+    position: absolute;
+    cursor: default;
 }
 
 ul {
+    z-index: 1;
     list-style-type: none;
     list-style-position: initial;
     list-style-image: initial;
@@ -38,4 +43,89 @@ ul > li {
     -webkit-box-align: center;
     align-items: center;
     white-space: pre-wrap;
+}
+
+ul > li > span {
+    color: rgb(200, 200, 200);
+    white-space: pre;
+    position: relative;
+    display: inline-block;
+    padding: 0;
+}
+
+ul > li > span.isPast {
+    color: rgb(0, 0, 0);
+}
+
+ul > li > span.incorrect {
+    color: rgb(255, 61, 61);
+}
+
+ul > li > span.incorrect.space {
+    /* top: ; */
+    /* top: 5px; */
+    transform: translateY(calc(1rem + (0.5 * (100% - 1rem))));
+    width: 100%;
+    height: .1rem;
+    background-image: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: red;
+    position: relative;
+    /* background-color: rgb(255, 78, 62); */
+}
+
+/* ul > li > span > span.cursor {
+    position: absolute;
+    background-color: rgb(200, 200, 200);
+    left: 0;
+    width: .1rem;
+    height: 100%;
+} */
+ul > li > span > span.cursor {
+    position: absolute;
+    top: calc(0.5 * (100% - 1.5rem));
+    left: 0px;
+    width: .1rem;
+    height: 1.6rem;
+    background-color: rgb(254, 191, 0);
+    /* background-image: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    animation-duration: 1s;
+    animation-timing-function: steps(1);
+    animation-delay: 0;
+    animation-iteration-count: infinite;
+    animation-direction: initial;
+    animation-fill-mode: initial;
+    animation-play-state: initial;
+    animation-name: blink;
+    animation-play-state: running; */
+    animation: blink 1s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+}
+
+@keyframes blink {
+    from {
+        opacity: 0;
+    }
+    99% {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
