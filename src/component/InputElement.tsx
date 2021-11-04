@@ -5,11 +5,27 @@ interface InputElement_P {
     onSubmit: Function
 }
 function InputElement(props: InputElement_P) {
+    const WrapperRef = useRef<HTMLDivElement>(null);
     const InputRef = useRef<HTMLTextAreaElement>(null);
     const [InputText, setText] = useState<string>("");
     const [Focused, setFocused] = useState<boolean>(false);
 
+    const CursorRef = useRef<HTMLSpanElement>(null);
+
     let RenderPos: number = 0;
+
+    useEffect(() => {
+        if (InputRef.current && CursorRef.current && WrapperRef.current) {
+            const WrapperPos = WrapperRef.current.getBoundingClientRect();
+            const CursorPos = CursorRef.current.getBoundingClientRect();
+            console.log(CursorPos.left - WrapperPos.left, CursorPos.top - WrapperPos.top+WrapperPos.height);
+
+            InputRef.current.style.left = `${CursorPos.x - WrapperPos.x}px`;
+            InputRef.current.style.top = `${(WrapperPos.y - CursorPos.y - CursorPos.height * 2) * -1}px`;
+            
+            // InputRef.current.offsetLeft
+        }
+    }, [InputText])
 
 
     function BeforeInputHandler(e: React.KeyboardEvent) {
@@ -51,9 +67,9 @@ function InputElement(props: InputElement_P) {
 
 
     return (
-        <>
-            <textarea className="InputElement" ref={InputRef} onChange={InputEventHandler} onKeyDown={BeforeInputHandler} onFocus={()=>setFocused(true)} onBlur={()=>setFocused(false)} onPaste={(e)=>e.preventDefault()} />
+        <div ref={WrapperRef}>
             <ul onClick={()=>InputRef.current?.focus()}>
+            <textarea className="InputElement" ref={InputRef} onChange={InputEventHandler} onKeyDown={BeforeInputHandler} onFocus={()=>setFocused(true)} onBlur={()=>setFocused(false)} onPaste={(e)=>e.preventDefault()} />
             {props.defaultStr.split(" ").map((Word, idx, arr) => {
                     if (idx < arr.length-1) Word+=" ";
 
@@ -83,13 +99,13 @@ function InputElement(props: InputElement_P) {
 
                             const ShowCursor = (InputText.length+1 == RenderPos)&&Focused;
                             // console.log(RenderPos);
-                            return <span key={idx+i+""} className={ClassName.join(" ")}>{Str}{ShowCursor&& <span className="cursor"></span>}</span>
+                            return <span key={idx+i+""} className={ClassName.join(" ")}>{Str}{ShowCursor&& <span ref={CursorRef} className="cursor"></span>}</span>
                         })
                     }</li>
                 })
             }
             </ul>
-        </>
+        </div>
     )
 }
 
